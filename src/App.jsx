@@ -18,16 +18,16 @@ export default function App() {
   const [turns, setTurns] = useState(0);
   const [choiceOne, setChoiceOne] = useState(null);
   const [choiceTwo, setChoiceTwo] = useState(null);
-  const [flipState, setFlipState] = useState(false);
-  const [clickable, setClickable] = useState(true)
+  const [disable, setDisable] = useState(false);
 
   // useEffect
   useEffect(() => {
-    if (choiceOne && choiceTwo) {
+    cardHandler()
+  }, [])
 
-      if (choiceOne || choiceTwo) {
-        setFlipState(true)
-      }
+  useEffect(() => {
+    if (choiceOne && choiceTwo) {
+      setDisable(true)
 
       // map out matched cards
       if (choiceOne.src === choiceTwo.src) {
@@ -40,13 +40,18 @@ export default function App() {
             }
           })
         })
-      } else {
-        console.log("No Match! Try again")
-        setChoiceOne("")
-        setChoiceTwo("")
+        setDisable(false)
+      } else if (choiceOne.src !== choiceTwo.src) {
+        setTimeout(() => reset(), 1000)
       }
     }
   }, [choiceOne, choiceTwo])
+
+  const reset = () => {
+    setChoiceOne("");
+    setChoiceTwo("");
+    setDisable(false)
+  }
 
   // double and shuffle cards
   const cardHandler = () => {
@@ -56,7 +61,8 @@ export default function App() {
       .map((card) => ({ ...card, id: uuidv4() }))
     // put cards into state
     setCards(shuffledCards);  
-    setTurns(0)
+
+    setTurns(0);
   }
 
   // handle choices
@@ -70,7 +76,7 @@ export default function App() {
   return (
     <div className="App">
       
-      <h1>Magic Match</h1>
+      <h1>OSRS Match</h1>
       <button onClick={cardHandler}>
         New Game
       </button>
@@ -84,11 +90,14 @@ export default function App() {
             card={card} 
             handleChoice={handleChoice} 
             flipped={card === choiceOne || card === choiceTwo || card.matched}
-            clickable={clickable}
+            disabled={disable}
           />
         ))}
       </div>
 
+      <div className="finished">
+        
+      </div>
     </div>
   )
 }
