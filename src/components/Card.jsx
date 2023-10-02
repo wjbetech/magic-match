@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Card = ({ card, handleChoice }) => {
+const Card = ({ card, handleChoice, flipped }) => {
 
   const handleClick = () => {
     handleChoice(card)
@@ -8,21 +8,18 @@ const Card = ({ card, handleChoice }) => {
 
   return (
     <div className="card">
-
-        {/* back of card - pattern bg */}
-        <div 
-            className="card-back" 
-            onClick={handleClick}>
-        </div>
-
-        {/* front of card - icon  */}
-        <div className="card-front">
+        {flipped
+        ? <div className="card-front">
             <img 
                 src={card.src} 
                 alt="image card" 
             />
         </div>
-
+        : <div 
+            className="card-back" 
+            onClick={handleClick}>
+        </div>
+        }
     </div>
   )
 }
